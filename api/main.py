@@ -6,45 +6,46 @@ from fastapi.responses import Response
 from pydantic import ConfigDict, BaseModel, Field, EmailStr
 from pydantic.functional_validators import BeforeValidator
 from typing_extensions import Annotated
-from enums import (
+from app.enums import (
     RecosCategory,
-    ShowCategory,
-    BookCategory,
-    MusicCategory,
-    GameCategory,
-    GamePlatform,
-    AppCategory,
     Scopes,
-    PodcastCategory,
 )
 from bson import ObjectId
 import motor.motor_asyncio
 from pymongo import ReturnDocument
 from contextlib import asynccontextmanager
+from dotenv import load_dotenv
+from app import app
 
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    try:
-        yield db
-    finally:
-        client.close()
-
+load_dotenv()
 
 MONGO_URI = os.environ.get("MONGO_URI")
 
-
-motor_client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_URI)
-db = motor_client.recos
-
-
-async def get_db() -> motor_client:
-    try:
-        db = motor_client.recos
-        yield db
-    finally:
-        client.close()
+client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_URI)
+db = client["reco"]
 
 
-ouath2_app = FastAPI()
-app = FastAPI()
+class User(BaseModel):
+    email: EmailStr
+    password: str
+    scopes: List[Scopes] = []
+
+
+class UserInDB(User):
+    _id: str
+
+
+class UserInResponse(BaseModel):
+    _id: str
+    email: EmailStr
+    scopes: List[Scopes] = []
+
+
+class Recommendation(BaseModel):
+    title: str
+    description: str
+    category: RecosCategory
+
+
+class RecommendationInDB(Recommendation):
+    id: str

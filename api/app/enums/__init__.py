@@ -10,7 +10,6 @@ class Scopes(Enum):
         "recos:write",
         "recos:read",
         "recos:public",
-        "recos:private",
     ]
 
 

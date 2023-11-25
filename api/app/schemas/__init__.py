@@ -1,15 +1,15 @@
 # The RecoBase class is a subclass of the BaseModel class.
 from pydantic import BaseModel
-from api.enums import (
-    AppCategory,
+from enums import (
+    RecosCategory,
+    ShowCategory,
     BookCategory,
+    MusicCategory,
     GameCategory,
     GamePlatform,
-    MusicCategory,
     PodcastCategory,
-    RecosCategory,
+    AppCategory,
     Scopes,
-    ShowCategory,
 )
 
 
@@ -22,7 +22,7 @@ class RecoBase(BaseModel):
     rating: int
     category: RecosCategory
     owner: str
-    is_public: boolS
+    is_public: bool
 
 
 class RecoMovie(RecoBase):
@@ -101,3 +101,17 @@ class UserBase(BaseModel):
     password: str
     scopes: Scopes
     recos: list
+
+
+__all__ = [
+    "RecoBase",
+    "RecoMovie",
+    "RecoShow",
+    "RecoBook",
+    "RecoSong",
+    "RecoArtist",
+    "RecoGame",
+    "RecoPodcast",
+    "RecoApp",
+    "UserBase",
+]
